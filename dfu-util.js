@@ -90,33 +90,33 @@ var device = null;
         }
     }
 
-    // function populateInterfaceList(form, device_, interfaces) {
-        // let old_choices = Array.from(form.getElementsByTagName("div"));
-        // for (let radio_div of old_choices) {
-            // form.removeChild(radio_div);
-        // }
+    function populateInterfaceList(form, device_, interfaces) {
+        let old_choices = Array.from(form.getElementsByTagName("div"));
+        for (let radio_div of old_choices) {
+            form.removeChild(radio_div);
+        }
 
-        // let button = form.getElementsByTagName("button")[0];
+        let button = form.getElementsByTagName("button")[0];
 
-        // for (let i=0; i < interfaces.length; i++) {
-            // let radio = document.createElement("input");
-            // radio.type = "radio";
-            // radio.name = "interfaceIndex";
-            // radio.value = i;
-            // radio.id = "interface" + i;
-            // radio.required = true;
+        for (let i=0; i < interfaces.length; i++) {
+            let radio = document.createElement("input");
+            radio.type = "radio";
+            radio.name = "interfaceIndex";
+            radio.value = i;
+            radio.id = "interface" + i;
+            radio.required = true;
 
-            // let label = document.createElement("label");
-            // label.textContent = formatDFUInterfaceAlternate(interfaces[i]);
-            // label.className = "radio"
-            // label.setAttribute("for", "interface" + i);
+            let label = document.createElement("label");
+            label.textContent = formatDFUInterfaceAlternate(interfaces[i]);
+            label.className = "radio"
+            label.setAttribute("for", "interface" + i);
 
-            // let div = document.createElement("div");
-            // div.appendChild(radio);
-            // div.appendChild(label);
-            // form.insertBefore(div, button);
-        // }
-    // }
+            let div = document.createElement("div");
+            div.appendChild(radio);
+            div.appendChild(label);
+            form.insertBefore(div, button);
+        }
+    }
 
     function getDFUDescriptorProperties(device) {
         // Attempt to read the DFU functional descriptor
@@ -230,35 +230,35 @@ var device = null;
         let interfaceForm = document.querySelector("#interfaceForm");
         let interfaceSelectButton = document.querySelector("#selectInterface");
 
-        // let searchParams = new URLSearchParams(window.location.search);
-        // let fromLandingPage = false;
-        // let vid = 0;
-        Set the vendor ID from the landing page URL
-        // if (searchParams.has("vid")) {
-            // const vidString = searchParams.get("vid");
-            // try {
-                // if (vidString.toLowerCase().startsWith("0x")) {
-                    // vid = parseInt(vidString, 16);
-                // } else {
-                    // vid = parseInt(vidString, 10);
-                // }
-                vidField.value = "0x" + hex4(vid).toUpperCase();
-                // fromLandingPage = true;
-            // } catch (error) {
-                // console.log("Bad VID " + vidString + ":" + error);
-            // }
-        // }
+        let searchParams = new URLSearchParams(window.location.search);
+        let fromLandingPage = false;
+        let vid = 0;
+        // Set the vendor ID from the landing page URL
+        if (searchParams.has("vid")) {
+            const vidString = searchParams.get("vid");
+            try {
+                if (vidString.toLowerCase().startsWith("0x")) {
+                    vid = parseInt(vidString, 16);
+                } else {
+                    vid = parseInt(vidString, 10);
+                }
+                //vidField.value = "0x" + hex4(vid).toUpperCase();
+                fromLandingPage = true;
+            } catch (error) {
+                console.log("Bad VID " + vidString + ":" + error);
+            }
+        }
 
-        Grab the serial number from the landing page
-        // let serial = "";
-        // if (searchParams.has("serial")) {
-            // serial = searchParams.get("serial");
-            Workaround for Chromium issue 339054
-            // if (window.location.search.endsWith("/") && serial.endsWith("/")) {
-                // serial = serial.substring(0, serial.length-1);
-            // }
-            // fromLandingPage = true;
-        // }
+        // Grab the serial number from the landing page
+        let serial = "";
+        if (searchParams.has("serial")) {
+            serial = searchParams.get("serial");
+            // Workaround for Chromium issue 339054
+            if (window.location.search.endsWith("/") && serial.endsWith("/")) {
+                serial = serial.substring(0, serial.length-1);
+            }
+            fromLandingPage = true;
+        }
 
         let configForm = document.querySelector("#configForm");
 
@@ -490,86 +490,50 @@ var device = null;
             // }
         // });
 
-		// connectButton.addEventListener('click', function() {
-            // if (device) {
-                // device.close().then(onDisconnect);
-                // device = null;
-            // } else {
-                // let filters = [];
-                // if (serial) {
-                    // filters.push({ 'serialNumber': serial });
-                // } else if (vid) {
-                    // filters.push({ 'vendorId': vid });
-                // }
-                // navigator.usb.requestDevice({ 'filters': filters }).then(
-                    // async selectedDevice => {
-                        // let interfaces = dfu.findDeviceDfuInterfaces(selectedDevice);
-                        // if (interfaces.length == 0) {
-                            // console.log(selectedDevice);
-                            // statusDisplay.textContent = "The selected device does not have any USB DFU interfaces.";
-                        // } else if (interfaces.length == 1) {
-                            // await fixInterfaceNames(selectedDevice, interfaces);
-                            // device = await connect(new dfu.Device(selectedDevice, interfaces[0]));
-                        // } else {
-                            // await fixInterfaceNames(selectedDevice, interfaces);
-                            // populateInterfaceList(interfaceForm, selectedDevice, interfaces);
-                            // async function connectToSelectedInterface() {
-                                // interfaceForm.removeEventListener('submit', this);
-                                // const index = interfaceForm.elements["interfaceIndex"].value;
-                                // device = await connect(new dfu.Device(selectedDevice, interfaces[index]));
-                            // }
+		connectButton.addEventListener('click', function() {
+            if (device) {
+                device.close().then(onDisconnect);
+                device = null;
+            } else {
+                let filters = [];
+                if (serial) {
+                    filters.push({ 'serialNumber': serial });
+                } else if (vid) {
+                    filters.push({ 'vendorId': vid });
+                }
+                navigator.usb.requestDevice({ 'filters': filters }).then(
+                    async selectedDevice => {
+                        let interfaces = dfu.findDeviceDfuInterfaces(selectedDevice);
+                        if (interfaces.length == 0) {
+                            console.log(selectedDevice);
+                            statusDisplay.textContent = "The selected device does not have any USB DFU interfaces.";
+                        } else if (interfaces.length == 1) {
+                            await fixInterfaceNames(selectedDevice, interfaces);
+                            device = await connect(new dfu.Device(selectedDevice, interfaces[0]));
+                        } else {
+                            await fixInterfaceNames(selectedDevice, interfaces);
+                            populateInterfaceList(interfaceForm, selectedDevice, interfaces);
+                            async function connectToSelectedInterface() {
+                                interfaceForm.removeEventListener('submit', this);
+                                const index = interfaceForm.elements["interfaceIndex"].value;
+                                device = await connect(new dfu.Device(selectedDevice, interfaces[index]));
+                            }
 
-                            // interfaceForm.addEventListener('submit', connectToSelectedInterface);
+                            interfaceForm.addEventListener('submit', connectToSelectedInterface);
 
-                            // interfaceDialog.addEventListener('cancel', function () {
-                                // interfaceDialog.removeEventListener('cancel', this);
-                                // interfaceForm.removeEventListener('submit', connectToSelectedInterface);
-                            // });
+                            interfaceDialog.addEventListener('cancel', function () {
+                                interfaceDialog.removeEventListener('cancel', this);
+                                interfaceForm.removeEventListener('submit', connectToSelectedInterface);
+                            });
 
-                            // interfaceDialog.showModal();
-                        // }
-                    // }
-                // ).catch(error => {
-                    // statusDisplay.textContent = error;
-                // });
-            // }
-        // });
-		
-		
-			connectButton.addEventListener('click', async () => {
-			  if (device) {
-				await device.close();
-				device = null;
-				onDisconnect();
-				return;
-			  }
-
-			  try {
-				const filters = [{ vendorId: 0x0483, productId: 0xDF11 }];
-				const selectedDevice = await navigator.usb.requestDevice({ filters });
-
-				if (!selectedDevice.productName?.includes("DFU")) {
-				  statusDisplay.textContent = "Not a DFU device.";
-				  return;
-				}
-
-				const interfaces = dfu.findDeviceDfuInterfaces(selectedDevice);
-				if (interfaces.length === 0) {
-				  statusDisplay.textContent = "No DFU interfaces found.";
-				  return;
-				}
-
-				await fixInterfaceNames(selectedDevice, interfaces);
-				const selectedInterface = interfaces[0]; // assume only 1 interface
-				device = await connect(new dfu.Device(selectedDevice, selectedInterface));
-
-			  } catch (err) {
-				statusDisplay.textContent = "Connection error: " + (err.message || err);
-			  }
-			});
-
-
-
+                            interfaceDialog.showModal();
+                        }
+                    }
+                ).catch(error => {
+                    statusDisplay.textContent = error;
+                });
+            }
+        });
 
         // detachButton.addEventListener('click', function() {
             // if (device) {
