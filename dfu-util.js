@@ -490,7 +490,7 @@ var device = null;
             // }
         // });
 
-        connectButton.addEventListener('click', function() {
+		connectButton.addEventListener('click', function() {
             if (device) {
                 device.close().then(onDisconnect);
                 device = null;
