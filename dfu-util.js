@@ -506,25 +506,25 @@ var device = null;
                         let interfaces = dfu.findDeviceDfuInterfaces(selectedDevice);
                         if (interfaces.length == 0) {
                             console.log(selectedDevice);
-                            statusDisplay.textContent = "The selected device does not have any USB DFU interfaces.";
+                            statusDisplay.textContent = "Please select a device.";
                         } else if (interfaces.length == 1) {
                             await fixInterfaceNames(selectedDevice, interfaces);
                             device = await connect(new dfu.Device(selectedDevice, interfaces[0]));
                         } else {
                             await fixInterfaceNames(selectedDevice, interfaces);
-                            populateInterfaceList(interfaceForm, selectedDevice, interfaces);
-                            async function connectToSelectedInterface() {
-                                interfaceForm.removeEventListener('submit', this);
-                                const index = interfaceForm.elements["interfaceIndex"].value;
-                                device = await connect(new dfu.Device(selectedDevice, interfaces[index]));
-                            }
+                            // populateInterfaceList(interfaceForm, selectedDevice, interfaces);
+                            // async function connectToSelectedInterface() {
+                                // interfaceForm.removeEventListener('submit', this);
+                                // const index = interfaceForm.elements["interfaceIndex"].value;
+                                // device = await connect(new dfu.Device(selectedDevice, interfaces[index]));
+                            // }
+							device = await connect(new dfu.Device(selectedDevice, interfaces[0]));
+                            // interfaceForm.addEventListener('submit', connectToSelectedInterface);
 
-                            interfaceForm.addEventListener('submit', connectToSelectedInterface);
-
-                            interfaceDialog.addEventListener('cancel', function () {
-                                interfaceDialog.removeEventListener('cancel', this);
-                                interfaceForm.removeEventListener('submit', connectToSelectedInterface);
-                            });
+                            // interfaceDialog.addEventListener('cancel', function () {
+                                // interfaceDialog.removeEventListener('cancel', this);
+                                // interfaceForm.removeEventListener('submit', connectToSelectedInterface);
+                            // });
 
                             interfaceDialog.showModal();
                         }
