@@ -1,0 +1,5 @@
+{
+  "Robot_4.0.0.bin": "Initial release. Features: Basic robot control.",
+  "Robot_4.1.0.bin": "Added obstacle avoidance. Improved motor control.",
+  "Robot_4.2.0.bin": "Bug fixes. Added support for new sensors."
+}
