@@ -562,14 +562,71 @@ var device = null;
         });
 
         // --- WebUSB Availability Check ---
+        function isSupportedBrowser() {
+            const ua = navigator.userAgent;
+            return ua.includes('Chrome') || ua.includes('Edg/');
+        }
+
         if (typeof navigator.usb !== 'undefined') {
-            navigator.usb.addEventListener("disconnect", onUnexpectedDisconnect);
-            if (fromLandingPage) {
-                autoConnect(vid, serial);
+            if (!isSupportedBrowser()) {
+                statusDisplay.textContent = 'Warning: This tool works best in Chrome or Edge with WebUSB support.';
+                connectButton.disabled = true;
+                downloadButton.disabled = true;
+                firmwareVersionSelect.disabled = true;
+            } else {
+                navigator.usb.addEventListener("disconnect", onUnexpectedDisconnect);
+                if (fromLandingPage) {
+                    autoConnect(vid, serial);
+                }
             }
         } else {
-            statusDisplay.textContent = 'WebUSB not available.';
+            statusDisplay.textContent = 'Please use Chrome or Edge.';
             connectButton.disabled = true;
+            downloadButton.disabled = true;
+            firmwareVersionSelect.disabled = true;
         }
+
+        // --- UI Enable/Disable Logic ---
+        function updateFirmwareUIState() {
+            if (device) {
+                firmwareVersionSelect.disabled = false;
+                if (firmwareVersionSelect.selectedIndex >= 0 && firmwareVersionSelect.value) {
+                    downloadButton.disabled = false;
+                } else {
+                    downloadButton.disabled = true;
+                }
+            } else {
+                firmwareVersionSelect.disabled = true;
+                downloadButton.disabled = true;
+            }
+        }
+
+        // Initial state
+        firmwareVersionSelect.disabled = true;
+        downloadButton.disabled = true;
+
+        // Update UI state on device connect/disconnect
+        function onDeviceConnected() {
+            updateFirmwareUIState();
+        }
+        function onDeviceDisconnected() {
+            updateFirmwareUIState();
+        }
+
+        // Update UI state on firmware selection
+        firmwareVersionSelect.addEventListener('change', updateFirmwareUIState);
+
+        // Patch connect/disconnect logic to update UI
+        let originalConnect = connect;
+        connect = async function(dev) {
+            let result = await originalConnect(dev);
+            onDeviceConnected();
+            return result;
+        };
+        let originalOnDisconnect = onDisconnect;
+        onDisconnect = function(reason) {
+            originalOnDisconnect(reason);
+            onDeviceDisconnected();
+        };
     });
 })();
