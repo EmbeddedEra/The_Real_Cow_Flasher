@@ -478,12 +478,8 @@ var device = null;
                 device.close().then(onDisconnect);
                 device = null;
             } else {
-                let filters = [];
-                if (serial) {
-                    filters.push({ 'serialNumber': serial });
-                } else if (vid) {
-                    filters.push({ 'vendorId': vid });
-                }
+                // Always use STM32 DFU mode filter
+                let filters = [{ vendorId: 0x0483, productId: 0xDF11 }];
                 navigator.usb.requestDevice({ 'filters': filters }).then(
                     async selectedDevice => {
                         let interfaces = dfu.findDeviceDfuInterfaces(selectedDevice);
@@ -500,7 +496,11 @@ var device = null;
                         }
                     }
                 ).catch(error => {
-                    statusDisplay.textContent = error;
+                    if (error && error.name === 'NotFoundError') {
+                        statusDisplay.textContent = 'No device selected.';
+                    } else {
+                        statusDisplay.textContent = error;
+                    }
                 });
             }
         });
