@@ -540,13 +540,22 @@ var device = null;
                                 },
                                 error => {
                                     // It didn't reset and disconnect for some reason...
-                                    console.log("Device unexpectedly tolerated manifestation.");
+                                    if (error && error.message && error.message.includes('controlTransferIn')) {
+                                        logInfo("Device disconnected (normal after flashing). Please reconnect if needed.");
+                                    } else {
+                                        logWarning("Device unexpectedly tolerated manifestation.");
+                                    }
                                 }
                             );
                         }
                     },
                     error => {
-                        logError(error);
+                        // Handle disconnect error after flash as info
+                        if (error && error.message && error.message.includes('controlTransferIn')) {
+                            logInfo("Device disconnected (normal after flashing). Please reconnect if needed.");
+                        } else {
+                            logError(error);
+                        }
                         setLogContext(null);
                     }
                 )
