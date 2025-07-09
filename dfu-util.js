@@ -192,6 +192,14 @@ var device = null;
     }
 
     function logError(msg) {
+        // Suppress known disconnect errors after flashing
+        if (
+            (typeof msg === 'string' && (msg.includes('DFU GETSTATUS failed') || msg.includes('controlTransferIn')))
+            || (msg && msg.message && msg.message.includes('controlTransferIn'))
+        ) {
+            //logInfo("Device disconnected (normal after flashing). Please reconnect if needed.");
+            return;
+        }
         if (logContext) {
             let error = document.createElement("p");
             error.className = "error";
@@ -540,8 +548,12 @@ var device = null;
                                 },
                                 error => {
                                     // It didn't reset and disconnect for some reason...
-                                    if (error && error.message && error.message.includes('controlTransferIn')) {
-                                        logInfo("Device disconnected (normal after flashing). Please reconnect if needed.");
+                                    if (
+                                        (error && error.message && error.message.includes('controlTransferIn')) ||
+                                        (error && error.toString && error.toString().includes('controlTransferIn')) ||
+                                        (typeof error === 'string' && error.includes('DFU GETSTATUS failed'))
+                                    ) {
+                                       // logInfo("Device disconnected (normal after flashing). Please reconnect if needed.");
                                     } else {
                                         logWarning("Device unexpectedly tolerated manifestation.");
                                     }
@@ -551,7 +563,11 @@ var device = null;
                     },
                     error => {
                         // Handle disconnect error after flash as info
-                        if (error && error.message && error.message.includes('controlTransferIn')) {
+                        if (
+                            (error && error.message && error.message.includes('controlTransferIn')) ||
+                            (error && error.toString && error.toString().includes('controlTransferIn')) ||
+                            (typeof error === 'string' && error.includes('DFU GETSTATUS failed'))
+                        ) {
                             logInfo("Device disconnected (normal after flashing). Please reconnect if needed.");
                         } else {
                             logError(error);
