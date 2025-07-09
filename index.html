@@ -88,4 +88,15 @@
       });
     </script>
   </body>
+  <footer>
+    <div id="version" style="position: fixed; bottom: 8px; right: 16px; color: #aaa; font-size: 0.95em; z-index: 1000;">
+      Version: <span id="versionString">v1.0.0</span>
+    </div>
+    <script>
+      // Load version from version.json if available
+      fetch('version.json').then(r => r.json()).then(data => {
+        document.getElementById('versionString').textContent = data.version;
+      }).catch(() => {});
+    </script>
+  </footer>
 </html>
