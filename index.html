@@ -3,10 +3,18 @@
   <head>
     <meta charset="UTF-8">
     <title>The Real Cow Flasher</title>
-    <link rel="stylesheet" type="text/css" href="sakura-dark.css" />
-    <script src="dfu.js"></script>
-    <script src="dfuse.js"></script>
-    <script src="dfu-util.js"></script>
+    <link rel="stylesheet" type="text/css" href="sakura-dark.css?v=" id="cssLink" />
+    <script>
+      // Load version from version.json and update cache-busting query for CSS/JS
+      fetch('version.json').then(r => r.json()).then(data => {
+        document.getElementById('versionString').textContent = data.version;
+        // Update CSS and JS links with version for cache busting
+        document.getElementById('cssLink').href = 'sakura-dark.css?v=' + data.version;
+        document.querySelector('script[src="dfu.js"]').src = 'dfu.js?v=' + data.version;
+        document.querySelector('script[src="dfuse.js"]').src = 'dfuse.js?v=' + data.version;
+        document.querySelector('script[src="dfu-util.js"]').src = 'dfu-util.js?v=' + data.version;
+      }).catch(() => {});
+    </script>
     <style>
       p.warning, p.error { color: red; font-weight: bold; }
       label.radio { display: inline; }
@@ -92,11 +100,5 @@
     <div id="version" style="position: fixed; bottom: 8px; right: 16px; color: #aaa; font-size: 0.95em; z-index: 1000;">
       Version: <span id="versionString">v1.0.0</span>
     </div>
-    <script>
-      // Load version from version.json if available
-      fetch('version.json').then(r => r.json()).then(data => {
-        document.getElementById('versionString').textContent = data.version;
-      }).catch(() => {});
-    </script>
   </footer>
 </html>
