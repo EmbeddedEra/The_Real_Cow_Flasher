@@ -102,12 +102,20 @@
         await loadChangelog();
         showChangelogForSelected();
         document.getElementById('firmwareVersion').addEventListener('change', showChangelogForSelected);
+        // Load version from version.json and update footer
+        try {
+          const response = await fetch('version.json');
+          const data = await response.json();
+          document.getElementById('versionString').textContent = data.version;
+        } catch (e) {
+          document.getElementById('versionString').textContent = 'Unknown';
+        }
       });
     </script>
   </body>
   <footer>
     <div id="version" style="position: fixed; bottom: 8px; right: 16px; color: #aaa; font-size: 0.95em; z-index: 1000;">
-      Version: <span id="versionString">v1.0.4</span>
+      Version: <span id="versionString">Loading...</span>
     </div>
   </footer>
 </html>
