@@ -36,7 +36,24 @@
       async function populateFirmwareDropdown() {
         try {
           const response = await fetch('firmware.json');
-          const files = await response.json();
+          let files = await response.json();
+          // Sort files so latest version appears first
+          files.sort((a, b) => {
+            // Extract version numbers from filenames like Robot_4.2.0.bin
+            const verA = a.match(/(\d+\.\d+\.\d+)/);
+            const verB = b.match(/(\d+\.\d+\.\d+)/);
+            if (verA && verB) {
+              // Compare as [major, minor, patch]
+              const pa = verA[1].split('.').map(Number);
+              const pb = verB[1].split('.').map(Number);
+              for (let i = 0; i < 3; i++) {
+                if (pa[i] !== pb[i]) return pb[i] - pa[i];
+              }
+              return 0;
+            }
+            // If no version, sort alphabetically
+            return b.localeCompare(a);
+          });
           const select = document.getElementById('firmwareVersion');
           select.innerHTML = '';
           if (files.length === 0) {
@@ -90,7 +107,7 @@
   </body>
   <footer>
     <div id="version" style="position: fixed; bottom: 8px; right: 16px; color: #aaa; font-size: 0.95em; z-index: 1000;">
-      Version: <span id="versionString">v1.0.3</span>
+      Version: <span id="versionString">v1.0.4</span>
     </div>
   </footer>
 </html>
