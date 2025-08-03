@@ -28,6 +28,7 @@
           <option>Loading...</option>
         </select>
         <button id="download" disabled>Download</button>
+        <button id="eraseOnly" disabled>Erase Only</button>
         <div class="log" id="downloadLog"></div>
         <div id="changelog"></div>
       </fieldset>
@@ -110,6 +111,120 @@
         } catch (e) {
           document.getElementById('versionString').textContent = 'Unknown';
         }
+
+        // Enable/disable erase button based on device connection
+        const eraseBtn = document.getElementById('eraseOnly');
+        function updateEraseButton() {
+          eraseBtn.disabled = !window.device;
+        }
+        
+        // Check device status periodically to update button state
+        setInterval(updateEraseButton, 500);
+        
+        // Also update on page load
+        updateEraseButton();
+
+        eraseBtn.addEventListener('click', async () => {
+          if (!window.device) {
+            alert('No device connected!');
+            return;
+          }
+          eraseBtn.disabled = true;
+          const logDiv = document.getElementById('downloadLog');
+          logDiv.textContent = 'Starting erase operation...';
+          try {
+            // First try to clear any existing DFU error state
+            try {
+              let status = await window.device.getStatus();
+              if (status.state === dfu.dfuERROR) {
+                await window.device.clearStatus();
+                logDiv.textContent = 'Cleared DFU error state, retrying erase...';
+              }
+            } catch (e) {
+              // Ignore status check errors
+            }
+            
+            // Try different erase methods based on device type
+            if (window.device.memoryInfo && window.device.erase) {
+              // DfuSe device - use the built-in erase method
+              let startAddress = window.device.startAddress || window.device.memoryInfo.segments[0].start || 0x08000000;
+              let eraseSize = window.device.memoryInfo.segments.reduce((a, s) => a + (s.end - s.start), 0);
+              logDiv.textContent = `Erasing ${(eraseSize / 1024).toFixed(0)}KB from address 0x${startAddress.toString(16).toUpperCase()}...`;
+              await window.device.erase(startAddress, eraseSize);
+              logDiv.textContent = 'Device erase completed successfully!';
+              
+            } else if (window.device.download) {
+              // Standard DFU device - try zero-length download
+              try {
+                logDiv.textContent = 'Sending DFU erase command...';
+                await window.device.download(new ArrayBuffer(0), 0);
+                
+                // Wait for erase to complete by polling device status
+                logDiv.textContent = 'Erasing device... (this may take several seconds)';
+                let attempts = 0;
+                const maxAttempts = 50; // 25 seconds max
+                
+                while (attempts < maxAttempts) {
+                  try {
+                    await new Promise(resolve => setTimeout(resolve, 500)); // Wait 500ms between polls
+                    const status = await window.device.getStatus();
+                    
+                    if (status.state === dfu.dfuIDLE) {
+                      logDiv.textContent = 'Device erase completed successfully!';
+                      break;
+                    } else if (status.state === dfu.dfuERROR) {
+                      throw `Erase failed with DFU error: ${status.string}`;
+                    } else if (status.state === dfu.dfuDNBUSY) {
+                      logDiv.textContent = `Erasing device... (${Math.round((attempts / maxAttempts) * 100)}% timeout)`;
+                    }
+                    
+                    attempts++;
+                  } catch (statusError) {
+                    // Some devices don't respond to getStatus during erase, that's normal
+                    if (attempts > 10) { // Give it at least 5 seconds
+                      logDiv.textContent = 'Erase command sent - device may be completing erase operation.';
+                      break;
+                    }
+                    attempts++;
+                  }
+                }
+                
+                if (attempts >= maxAttempts) {
+                  logDiv.textContent = 'Erase timeout - operation may still be in progress on device.';
+                }
+                
+              } catch (downloadError) {
+                // Zero-length download failed, try alternative methods
+                logDiv.textContent = 'Standard DFU erase not supported, trying alternative method...';
+                
+                // Try using a small dummy write to trigger erase
+                if (window.device.startAddress !== undefined) {
+                  let dummyData = new ArrayBuffer(4); // 4 bytes of zeros
+                  await window.device.download(dummyData, window.device.startAddress || 0x08000000);
+                  logDiv.textContent = 'Alternative erase method completed.';
+                } else {
+                  throw 'Device does not support erase operations via DFU.';
+                }
+              }
+              
+            } else {
+              throw 'Erase not supported on this device - no erase methods available.';
+            }
+            
+          } catch (e) {
+            logDiv.textContent = 'Erase failed: ' + e;
+            console.error('Erase error:', e);
+            
+            // Try to recover device from error state
+            try {
+              await window.device.clearStatus();
+            } catch (clearError) {
+              // Ignore clear status errors
+            }
+          } finally {
+            eraseBtn.disabled = false;
+          }
+        });
       });
     </script>
   </body>

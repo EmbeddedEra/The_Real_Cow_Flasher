@@ -564,7 +564,9 @@ var dfu = {};
         }
         
         while (!state_predicate(dfu_status.state) && dfu_status.state != dfu.dfuERROR) {
-            await async_sleep(dfu_status.pollTimeout);
+            // Clamp pollTimeout to a maximum of 1ms for faster operation
+            const sleepTime = Math.min(dfu_status.pollTimeout, 1);
+            await async_sleep(sleepTime);
             dfu_status = await this.getStatus();
         }
 
