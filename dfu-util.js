@@ -280,10 +280,19 @@ var device = null;
 	    let firmwareVersionSelect = document.getElementById('firmwareVersion');
 
         async function fetchSelectedFirmware() {
-	        let firmwareVersion = firmwareVersionSelect.options[firmwareVersionSelect.selectedIndex].value;
-	
-	        console.log("Firmware filename is ", firmwareVersion);
-	        const response = await fetch(firmwareVersion);
+            // Check if a local file is selected
+            const localFirmwareInput = document.getElementById('localFirmware');
+            if (localFirmwareInput && localFirmwareInput.files.length > 0) {
+                const file = localFirmwareInput.files[0];
+                console.log("Using local firmware file:", file.name);
+                return await file.arrayBuffer();
+            }
+            
+            // Otherwise use selected firmware from dropdown
+            let firmwareVersion = firmwareVersionSelect.options[firmwareVersionSelect.selectedIndex].value;
+    
+            console.log("Firmware filename is ", firmwareVersion);
+            const response = await fetch(firmwareVersion);
             const firmware = await response.arrayBuffer();
             console.log ("Firmware is ", firmware);
              return firmware;
@@ -514,6 +523,17 @@ var device = null;
                 configForm.reportValidity();
                 return false;
             }
+            
+            // Validate that either dropdown or local file is selected
+            const localFirmwareInput = document.getElementById('localFirmware');
+            const hasLocalFile = localFirmwareInput && localFirmwareInput.files.length > 0;
+            const hasDropdownSelection = firmwareVersionSelect.selectedIndex >= 0;
+            
+            if (!hasLocalFile && !hasDropdownSelection) {
+                alert('Please select a firmware file from the dropdown or choose a local file.');
+                return false;
+            }
+            
             // Debug: log before fetching firmware
             console.log("[DEBUG] device before download:", device);
             firmwareFile = await fetchSelectedFirmware(); 

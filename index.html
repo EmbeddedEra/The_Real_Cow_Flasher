@@ -12,6 +12,8 @@
       label.radio { display: inline; }
       input:invalid { color: red; }
       #changelog { margin-top: 1em; color: #ccc; }
+      #localFirmware { margin-left: 10px; }
+      .firmware-option { margin-bottom: 8px; }
     </style>
   </head>
   <body>
@@ -23,10 +25,16 @@
     <form id="configForm">
       <fieldset>
         <legend>Firmware</legend>
-        <label for="firmwareVersion">Select firmware:</label>
-        <select id="firmwareVersion" disabled>
-          <option>Loading...</option>
-        </select>
+        <div class="firmware-option">
+          <label for="firmwareVersion">Select firmware:</label>
+          <select id="firmwareVersion" disabled>
+            <option>Loading...</option>
+          </select>
+        </div>
+        <div class="firmware-option">
+          <label for="localFirmware">Or load from computer:</label>
+          <input type="file" id="localFirmware" accept=".bin,.hex,.dfu" />
+        </div>
         <button id="download" disabled>Download</button>
         <button id="eraseOnly" disabled>Erase Only</button>
         <div class="log" id="downloadLog"></div>
@@ -103,6 +111,27 @@
         await loadChangelog();
         showChangelogForSelected();
         document.getElementById('firmwareVersion').addEventListener('change', showChangelogForSelected);
+        
+        // Handle local file selection
+        const localFirmwareInput = document.getElementById('localFirmware');
+        const firmwareVersionSelect = document.getElementById('firmwareVersion');
+        
+        localFirmwareInput.addEventListener('change', (event) => {
+          if (event.target.files.length > 0) {
+            // Deselect dropdown when local file is chosen
+            firmwareVersionSelect.selectedIndex = -1;
+            showChangelogForSelected(); // Clear changelog
+          }
+        });
+        
+        firmwareVersionSelect.addEventListener('change', () => {
+          if (firmwareVersionSelect.selectedIndex >= 0) {
+            // Clear local file when dropdown is selected
+            localFirmwareInput.value = '';
+          }
+          showChangelogForSelected();
+        });
+        
         // Load version from version.json and update footer
         try {
           const response = await fetch('version.json');
