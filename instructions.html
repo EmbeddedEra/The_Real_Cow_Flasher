@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Firmware Loading Instructions</title>
+  <link rel="stylesheet" type="text/css" href="sakura-dark.css?v=1.0.1" />
+  <style>
+    body { max-width: 800px; margin: 2em auto; padding: 2em; background: #181818; color: #eee; font-size: 1.1em; }
+    h1, h2, h3 { color: #ffecb3; }
+    code, pre { background: #222; color: #ffe082; padding: 2px 6px; border-radius: 4px; }
+    ul, ol { margin-left: 2em; }
+    .section { margin-bottom: 2em; }
+    a { color: #ffd54f; }
+  </style>
+</head>
+<body>
+  <h1>The Real Cow Flasher – Firmware Loading Guide</h1>
+
+  <div class="section">
+    <h2>Overview</h2>
+    <p>The Real Cow Flasher web tool allows you to flash firmware to supported devices using WebUSB. You can load firmware in two ways:</p>
+    <ol>
+      <li><b>Select from Predefined Firmware</b>: Use the dropdown to pick a firmware version included with the project.</li>
+      <li><b>Load from Computer</b>: Upload a <code>.bin</code>, <code>.hex</code>, or <code>.dfu</code> file from your local machine.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>How to Use</h2>
+    <h3>Getting Your Device into DFU Mode</h3>
+    <ol>
+      <li><b>Press and hold the BOOT button.</b></li>
+      <li><b>While holding BOOT, press and release the RESET button.</b></li>
+      <li><b>Release the BOOT button.</b></li>
+    </ol>
+    <p>Your device should now be in DFU mode and will appear in the device list when you click <b>Connect</b>.<br>
+    If it does not appear, check your USB cable and try the steps again.</p>
+
+    <h3>1. Connect Your Device</h3>
+    <ul>
+      <li>Click the <b>Connect</b> button and select your device from the browser prompt.</li>
+      <li>Wait for the status to show "Connected".</li>
+    </ul>
+
+    <h3>2. Choose Firmware</h3>
+    <ul>
+      <li><b>Option A: Dropdown</b><br>
+        Use the <b>Select firmware</b> dropdown to pick a version from the list.</li>
+      <li><b>Option B: Local File</b><br>
+        Click <b>Or load from computer</b> and select a firmware file (<code>.bin</code>, <code>.hex</code>, <code>.dfu</code>).</li>
+      <li>Only one method can be active at a time. Selecting a file clears the dropdown, and vice versa.</li>
+    </ul>
+
+    <h3>3. Flash Firmware</h3>
+    <ul>
+      <li>Click <b>Download</b> to start flashing.</li>
+      <li>Progress and status messages will appear below the buttons.</li>
+    </ul>
+
+    <h3>4. Erase Only (Optional)</h3>
+    <ul>
+      <li>Click <b>Erase Only</b> to erase the device without flashing new firmware.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Technical Details</h2>
+    <ul>
+      <li><b>File Handling</b>: The tool uses the File API to read local files as <code>ArrayBuffer</code> for flashing.</li>
+      <li><b>Validation</b>: You must select either a dropdown firmware or a local file before downloading.</li>
+      <li><b>WebUSB</b>: Only works in Chrome or Edge browsers with WebUSB support.</li>
+      <li><b>Error Handling</b>: The UI will show errors if flashing fails or if no firmware is selected.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Supported File Types</h2>
+    <ul>
+      <li><code>.bin</code> (Binary)</li>
+      <li><code>.hex</code> (Intel HEX)</li>
+      <li><code>.dfu</code> (DFU format)</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Troubleshooting</h2>
+    <ul>
+      <li><b>No Device Found</b>: Make sure your device is in DFU mode and connected via USB.</li>
+      <li><b>Browser Not Supported</b>: Use Chrome or Edge for WebUSB support.</li>
+      <li><b>Firmware Not Flashing</b>: Check that the file is valid and compatible with your device.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Credits</h2>
+    <ul>
+      <li>Built with WebUSB and JavaScript</li>
+      <li>Maintained by EmbeddedEra</li>
+    </ul>
+  </div>
+
+  <p style="margin-top:2em; color:#aaa; font-size:0.95em;">For more details, see the code comments in <code>dfu-util.js</code> and <code>index.html</code>.</p>
+</body>
+</html>

@@ -19,6 +19,7 @@
   <body>
     <h1>The Real Cow Flasher</h1>
     <button id="connect">Connect</button>
+   <button id="helpBtn" style="float:right;">Instructions</button>
     <span id="status" style="margin-left: 1em;"></span>
     <div id="usbInfo" style="white-space: pre"></div>
     <div id="dfuInfo" style="white-space: pre"></div>
@@ -262,4 +263,9 @@
       Version: <span id="versionString">Loading...</span>
     </div>
   </footer>
+   <script>
+     document.getElementById('helpBtn').addEventListener('click', function() {
+       window.open('instructions.html', '_blank');
+     });
+   </script>
 </html>
