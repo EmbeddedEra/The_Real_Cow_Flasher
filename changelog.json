@@ -1,5 +1,6 @@
 {
   "Robot_4.0.0.bin": "Initial release. Features: Basic robot control.",
   "Robot_4.0.1.bin": "Changed Baud Rate of cow to 38400 from 115200, Fixed accel and decel",
-  "Robot_4.0.2.bin": "Fixed Turn direction"
+  "Robot_4.0.2.bin": "Fixed Turn direction",
+  "Robot_4.0.3.bin": "Changed default acceleration to 0.04 and deceleration to 0.06 values for smoother operation."
 }
