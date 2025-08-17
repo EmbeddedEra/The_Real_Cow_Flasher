@@ -99,6 +99,34 @@
     </ul>
   </div>
 
+    <div class="section">
+      <h2>Receiver Board Self-Test</h2>
+        <h3>How the Self-Test Works</h3>
+        <ul>
+          <li>The self-test is a non-blocking state machine that runs automatically when the board powers up or receives a packet.</li>
+          <li>It monitors five input signals and waits for each to transition from high (1) to low (0).</li>
+          <li>Each input must show a 1→0 transition for the test to pass.</li>
+          <li>If all transitions are detected within 60 seconds, the self-test passes and all three LEDs (POWER, PROBLEM, SIGNAL) turn ON.</li>
+          <li>If the timeout is reached before all transitions are seen, the test stops and LEDs indicate which inputs passed.</li>
+          <li>During the test, each LED turns ON as its group of inputs pass:</li>
+          <ul>
+            <li><b>POWER LED</b>: Turns ON when input 0 passes.</li>
+            <li><b>PROBLEM LED</b>: Turns ON when both inputs 2 & 3 pass.</li>
+            <li><b>SIGNAL LED</b>: Turns ON when both inputs 1 & 4 pass.</li>
+          </ul>
+          <li>After the self-test passes, the SIGNAL LED blinks when packets are received, otherwise stays ON.</li>
+          <li>If the board does not receive packets for a long time, it will reinitialize the radio automatically.</li>
+        </ul>
+        <h3>What to Expect</h3>
+        <ul>
+          <li>On power-up, all LEDs are OFF.</li>
+          <li>As you trigger each input (by toggling switches or activating sensors), the corresponding LED(s) will turn ON.</li>
+          <li>Once all required transitions are detected, all LEDs turn ON and the SIGNAL LED will blink on packet activity.</li>
+          <li>If the test times out, only the LEDs for passed inputs will be ON.</li>
+      <li><b>To trigger each input for the self-test, ground each pin one by one.</b></li>
+        </ul>
+    </div>
+
   <p style="margin-top:2em; color:#aaa; font-size:0.95em;">For more details, see the code comments in <code>dfu-util.js</code> and <code>index.html</code>.</p>
 </body>
 </html>
