@@ -226,9 +226,13 @@ var device = null;
     }
 
     document.addEventListener('DOMContentLoaded', event => {
+        // Global busy flag to control UI during flashing cycles
+        if (typeof window !== 'undefined') {
+            window.isFlashing = false;
+        }
         let connectButton = document.querySelector("#connect");
         let downloadButton = document.querySelector("#download");
-        let statusDisplay = document.querySelector("#status");
+    let statusDisplay = document.querySelector("#status");
         let infoDisplay = document.querySelector("#usbInfo");
         let dfuDisplay = document.querySelector("#dfuInfo");
         let interfaceDialog = document.querySelector("#interfaceDialog");
@@ -271,13 +275,14 @@ var device = null;
 
         let dfuseStartAddressField = document.querySelector("#dfuseStartAddress");
 
-        let downloadLog = document.querySelector("#downloadLog");
+    let downloadLog = document.querySelector("#downloadLog");
         let uploadLog = document.querySelector("#uploadLog");
 
         let manifestationTolerant = true;
 		
-		let firmwareFile = null;
-	    let firmwareVersionSelect = document.getElementById('firmwareVersion');
+        let firmwareFile = null;
+        let firmwareVersionSelect = document.getElementById('firmwareVersion');
+            const localFirmwareInput = document.getElementById('localFirmware');
 
         async function fetchSelectedFirmware() {
             // Check if a local file is selected
@@ -525,7 +530,6 @@ var device = null;
             }
             
             // Validate that either dropdown or local file is selected
-            const localFirmwareInput = document.getElementById('localFirmware');
             const hasLocalFile = localFirmwareInput && localFirmwareInput.files.length > 0;
             const hasDropdownSelection = firmwareVersionSelect.selectedIndex >= 0;
             
@@ -534,69 +538,74 @@ var device = null;
                 return false;
             }
             
-            // Debug: log before fetching firmware
-            console.log("[DEBUG] device before download:", device);
-            firmwareFile = await fetchSelectedFirmware(); 
-            // Debug: log after fetching firmware
-            console.log("[DEBUG] device:", device, "firmwareFile:", firmwareFile);
-            if (device && firmwareFile != null) {
-                setLogContext(downloadLog);
-                clearLog(downloadLog);
-                try {
-                    let status = await device.getStatus();
-                    if (status.state == dfu.dfuERROR) {
-                        await device.clearStatus();
-                    }
-                } catch (error) {
-                    device.logWarning("Failed to clear status");
-                }
-                await device.do_download(transferSize, firmwareFile, manifestationTolerant).then(
-                    () => {
-                        logInfo("Done!");
-                        setLogContext(null);
-                        if (!manifestationTolerant) {
-                            device.waitDisconnected(5000).then(
-                                dev => {
-                                    onDisconnect();
-                                    device = null;
-                                },
-                                error => {
-                                    // It didn't reset and disconnect for some reason...
-                                    if (
-                                        (error && error.message && error.message.includes('controlTransferIn')) ||
-                                        (error && error.toString && error.toString().includes('controlTransferIn')) ||
-                                        (typeof error === 'string' && error.includes('DFU GETSTATUS failed'))
-                                    ) {
-                                       // logInfo("Device disconnected (normal after flashing). Please reconnect if needed.");
-                                    } else {
-                                        logWarning("Device unexpectedly tolerated manifestation.");
-                                    }
-                                }
-                            );
+            // Mark flashing busy and update UI
+            if (typeof window !== 'undefined') window.isFlashing = true;
+            updateFirmwareUIState();
+
+            try {
+                // Debug: log before fetching firmware
+                console.log("[DEBUG] device before download:", device);
+                firmwareFile = await fetchSelectedFirmware();
+                // Debug: log after fetching firmware
+                console.log("[DEBUG] device:", device, "firmwareFile:", firmwareFile);
+                if (device && firmwareFile != null) {
+                    setLogContext(downloadLog);
+                    clearLog(downloadLog);
+                    try {
+                        let status = await device.getStatus();
+                        if (status.state == dfu.dfuERROR) {
+                            await device.clearStatus();
                         }
-                    },
-                    error => {
-                        // Handle disconnect error after flash as info
-                        if (
-                            (error && error.message && error.message.includes('controlTransferIn')) ||
-                            (error && error.toString && error.toString().includes('controlTransferIn')) ||
-                            (typeof error === 'string' && error.includes('DFU GETSTATUS failed'))
-                        ) {
-                            logInfo("Device disconnected (normal after flashing). Please reconnect if needed.");
-                        } else {
-                            logError(error);
-                        }
-                        setLogContext(null);
+                    } catch (error) {
+                        device.logWarning("Failed to clear status");
                     }
-                )
-            } else {
-                console.log("[DEBUG] No device or firmware file", device, firmwareFile);
-                if (!device) {
-                    logError("[DEBUG] Device is null in download handler!");
+
+                    await device.do_download(transferSize, firmwareFile, manifestationTolerant);
+
+                    logInfo("Done!");
+                    setLogContext(null);
+                    if (!manifestationTolerant) {
+                        try {
+                            await device.waitDisconnected(5000);
+                            onDisconnect();
+                            device = null;
+                        } catch (error) {
+                            // It didn't reset and disconnect for some reason...
+                            if (
+                                (error && error.message && error.message.includes('controlTransferIn')) ||
+                                (error && error.toString && error.toString().includes('controlTransferIn')) ||
+                                (typeof error === 'string' && error.includes('DFU GETSTATUS failed'))
+                            ) {
+                                // Normal after flashing
+                            } else {
+                                logWarning("Device unexpectedly tolerated manifestation.");
+                            }
+                        }
+                    }
+                } else {
+                    console.log("[DEBUG] No device or firmware file", device, firmwareFile);
+                    if (!device) {
+                        logError("[DEBUG] Device is null in download handler!");
+                    }
+                    if (!firmwareFile) {
+                        logError("[DEBUG] Firmware file is null in download handler!");
+                    }
                 }
-                if (!firmwareFile) {
-                    logError("[DEBUG] Firmware file is null in download handler!");
+            } catch (error) {
+                // Handle disconnect error after flash as info
+                if (
+                    (error && error.message && error.message.includes('controlTransferIn')) ||
+                    (error && error.toString && error.toString().includes('controlTransferIn')) ||
+                    (typeof error === 'string' && error.includes('DFU GETSTATUS failed'))
+                ) {
+                    logInfo("Device disconnected (normal after flashing). Please reconnect if needed.");
+                } else {
+                    logError(error);
                 }
+                setLogContext(null);
+            } finally {
+                if (typeof window !== 'undefined') window.isFlashing = false;
+                updateFirmwareUIState();
             }
         });
 
@@ -626,18 +635,18 @@ var device = null;
         }
 
         // --- UI Enable/Disable Logic ---
+        function hasFirmwareSelection() {
+            const hasLocal = !!localFirmwareInput && localFirmwareInput.files && localFirmwareInput.files.length > 0;
+            const hasDropdown = !!firmwareVersionSelect && firmwareVersionSelect.selectedIndex >= 0 && !!firmwareVersionSelect.value;
+            return hasLocal || hasDropdown;
+        }
+
         function updateFirmwareUIState() {
-            if (device) {
-                firmwareVersionSelect.disabled = false;
-                if (firmwareVersionSelect.selectedIndex >= 0 && firmwareVersionSelect.value) {
-                    downloadButton.disabled = false;
-                } else {
-                    downloadButton.disabled = true;
-                }
-            } else {
-                firmwareVersionSelect.disabled = true;
-                downloadButton.disabled = true;
-            }
+            const hasDevice = !!device;
+            const busy = (typeof window !== 'undefined') ? !!window.isFlashing : false;
+            firmwareVersionSelect.disabled = !hasDevice; // enable selection only when a device is connected
+            // Enable Download when we have a device, a firmware selected (dropdown or local), and not busy
+            downloadButton.disabled = !(hasDevice && hasFirmwareSelection() && !busy);
         }
 
         // Initial state
@@ -654,6 +663,9 @@ var device = null;
 
         // Update UI state on firmware selection
         firmwareVersionSelect.addEventListener('change', updateFirmwareUIState);
+        if (localFirmwareInput) {
+            localFirmwareInput.addEventListener('change', updateFirmwareUIState);
+        }
 
         // Patch connect/disconnect logic to update UI
         let originalConnect = connect;
@@ -667,5 +679,12 @@ var device = null;
             originalOnDisconnect(reason);
             onDeviceDisconnected();
         };
+
+        // Also reflect native USB connect events to keep UI fresh when a new MCU is connected
+        if (navigator.usb) {
+            navigator.usb.addEventListener('connect', () => {
+                onDeviceConnected();
+            });
+        }
     });
 })();
