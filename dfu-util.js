@@ -232,7 +232,7 @@ var device = null;
         }
         let connectButton = document.querySelector("#connect");
         let downloadButton = document.querySelector("#download");
-    let statusDisplay = document.querySelector("#status");
+        let statusDisplay = document.querySelector("#status");
         let infoDisplay = document.querySelector("#usbInfo");
         let dfuDisplay = document.querySelector("#dfuInfo");
         let interfaceDialog = document.querySelector("#interfaceDialog");
