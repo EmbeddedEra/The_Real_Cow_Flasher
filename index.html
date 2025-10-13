@@ -75,6 +75,10 @@
               option.textContent = file;
               select.appendChild(option);
             });
+            // Select the first (latest) firmware by default
+            if (select.options.length > 0) {
+              select.selectedIndex = 0;
+            }
             select.disabled = false;
           }
         } catch (e) {
@@ -99,7 +103,16 @@
         const select = document.getElementById('firmwareVersion');
         const changelogDiv = document.getElementById('changelog');
         if (!select || !changelogData) return;
-        const selected = select.options[select.selectedIndex]?.textContent;
+        
+        // Make sure we have a valid selection
+        if (select.selectedIndex < 0 || !select.options[select.selectedIndex]) {
+          changelogDiv.textContent = '';
+          return;
+        }
+        
+        const selected = select.options[select.selectedIndex].textContent;
+        console.log('Looking for changelog for:', selected, 'in', Object.keys(changelogData));
+        
         if (selected && changelogData[selected]) {
           changelogDiv.textContent = 'Changelog: ' + changelogData[selected];
         } else {
@@ -110,6 +123,7 @@
       window.addEventListener('DOMContentLoaded', async () => {
         await populateFirmwareDropdown();
         await loadChangelog();
+        // Show changelog for the default selected firmware
         showChangelogForSelected();
         document.getElementById('firmwareVersion').addEventListener('change', showChangelogForSelected);
         
