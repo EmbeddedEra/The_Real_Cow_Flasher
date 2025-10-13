@@ -313,7 +313,8 @@ var device = null;
             infoDisplay.textContent = "";
             dfuDisplay.textContent = "";
             downloadButton.disabled = true;
-            firmwareVersionSelect.disabled = true;
+            // Keep firmware dropdown enabled when disconnected so users can browse firmware options
+            // firmwareVersionSelect.disabled = true;
         }
 
         function onUnexpectedDisconnect(event) {
@@ -620,7 +621,8 @@ var device = null;
                 statusDisplay.textContent = 'Warning: This tool works best in Chrome or Edge with WebUSB support.';
                 connectButton.disabled = true;
                 downloadButton.disabled = true;
-                firmwareVersionSelect.disabled = true;
+                // Keep firmware dropdown enabled for browsing even with unsupported browser
+                // firmwareVersionSelect.disabled = true;
             } else {
                 navigator.usb.addEventListener("disconnect", onUnexpectedDisconnect);
                 if (fromLandingPage) {
@@ -631,7 +633,8 @@ var device = null;
             statusDisplay.textContent = 'Please use Chrome or Edge.';
             connectButton.disabled = true;
             downloadButton.disabled = true;
-            firmwareVersionSelect.disabled = true;
+            // Keep firmware dropdown enabled for browsing even with unsupported browser
+            // firmwareVersionSelect.disabled = true;
         }
 
         // --- UI Enable/Disable Logic ---
@@ -644,13 +647,14 @@ var device = null;
         function updateFirmwareUIState() {
             const hasDevice = !!device;
             const busy = (typeof window !== 'undefined') ? !!window.isFlashing : false;
-            firmwareVersionSelect.disabled = !hasDevice; // enable selection only when a device is connected
+            // Keep firmware dropdown always enabled so users can browse firmware options
+            // firmwareVersionSelect.disabled = !hasDevice; // enable selection only when a device is connected
             // Enable Download when we have a device, a firmware selected (dropdown or local), and not busy
             downloadButton.disabled = !(hasDevice && hasFirmwareSelection() && !busy);
         }
 
-        // Initial state
-        firmwareVersionSelect.disabled = true;
+        // Initial state - keep dropdown enabled for browsing
+        // firmwareVersionSelect.disabled = true;
         downloadButton.disabled = true;
 
         // Update UI state on device connect/disconnect

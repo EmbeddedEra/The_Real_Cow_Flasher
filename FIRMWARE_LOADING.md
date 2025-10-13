@@ -14,9 +14,8 @@ The Real Cow Flasher web tool allows you to flash firmware to supported devices 
 
 To enter DFU mode on most STM32-based devices:
 
-1. **Press and hold the BOOT button.**
-2. **While holding BOOT, press and release the RESET button.**
-3. **Release the BOOT button.**
+1. **Press and hold the BOOT button, then plug the USB**
+2. **Release the BOOT button.**
 
 Your device should now be in DFU mode and will appear in the device list when you click **Connect**.
 

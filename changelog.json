@@ -5,5 +5,6 @@
   "Robot_4.0.2.bin": "Fixed Turn direction",
   "Robot_4.0.3.bin": "Changed default acceleration to 0.04 and deceleration to 0.06 values for smoother operation.",
   "Remote_6.0.0.bin": "Remote Initial release. Features: Basic robot control.",
-  "Remote_6.0.1.bin": "Trim adjustments are applied when straight_mode is enabled. Enhanced tap detection logic for forward/backward/turns. Power-off routine improvements."
+  "Remote_6.0.1.bin": "Trim adjustments are applied when straight_mode is enabled. Enhanced tap detection logic for forward/backward/turns. Power-off routine improvements.",
+  "Remote_6.0.2.bin": "Fixed issue with double tap detection for forward and backward movements. If Pressed and hold then tap was not switching between fast and slow mode"
 }
