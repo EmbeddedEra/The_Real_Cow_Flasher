@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Self-Test Description</title>
+  <link rel="stylesheet" type="text/css" href="sakura-dark.css?v=1.0.1" />
+  <style>
+    body { max-width: 800px; margin: 2em auto; padding: 2em; background: #181818; color: #eee; font-size: 1.1em; }
+    h1, h2, h3 { color: #ffecb3; }
+    code, pre { background: #222; color: #ffe082; padding: 2px 6px; border-radius: 4px; }
+    ul, ol { margin-left: 2em; }
+    .section { margin-bottom: 2em; }
+    a { color: #ffd54f; }
+  </style>
+</head>
+<body>
+  <h2>Receiver Board Self-Test</h2>
+  <div class="section">
+    <h3>How the Self-Test Works</h3>
+    <ul>
+      <li>The self-test is a non-blocking state machine that runs automatically when the board powers up or receives a packet.</li>
+      <li>It monitors five input signals and waits for each to transition from high (1) to low (0).</li>
+      <li>Each input must show a 1→0 transition for the test to pass.</li>
+      <li>If all transitions are detected within 60 seconds, the self-test passes and all three LEDs (POWER, PROBLEM, SIGNAL) turn ON.</li>
+      <li>If the timeout is reached before all transitions are seen, the test stops and LEDs indicate which inputs passed.</li>
+      <li>During the test, each LED turns ON as its group of inputs pass:</li>
+      <ul>
+        <li><b>POWER LED</b>: Turns ON when input 0 passes.</li>
+        <li><b>PROBLEM LED</b>: Turns ON when both inputs 2 & 3 pass.</li>
+        <li><b>SIGNAL LED</b>: Turns ON when both inputs 1 & 4 pass.</li>
+      </ul>
+      <li>After the self-test passes, the SIGNAL LED blinks when packets are received, otherwise stays ON.</li>
+      <li>If the board does not receive packets for a long time, it will reinitialize the radio automatically.</li>
+    </ul>
+    <h3>What to Expect</h3>
+    <ul>
+      <li>On power-up, all LEDs are OFF.</li>
+      <li>As you trigger each input (by toggling switches or activating sensors), the corresponding LED(s) will turn ON.</li>
+      <li>Once all required transitions are detected, all LEDs turn ON and the SIGNAL LED will blink on packet activity.</li>
+      <li>If the test times out, only the LEDs for passed inputs will be ON.</li>
+    </ul>
+  </div>
+</body>
+</html>
