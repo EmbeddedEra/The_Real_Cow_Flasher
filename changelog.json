@@ -14,5 +14,6 @@
   "Remote_6.1.0.bin": "Do not use! Able to change the turn speed when moving",
   "Remote_6.1.1.bin": "Do not use! Fixed issue moving to the right turn was flipped",
   "Remote_6.1.2.bin": "Fixed Directions.",
-  "Remote_6.2.0.bin": "Added usb support for the Configurator Cow 2 is now usable"
+  "Remote_6.2.0.bin": "Added usb support for the Configurator Cow 2 is now usable",
+  "Remote_Record_6.3.0.bin": "Added Record and Playback functionality."
 }
