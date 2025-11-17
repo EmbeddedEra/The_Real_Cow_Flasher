@@ -11,9 +11,12 @@
   "Remote_6.0.2.bin": "Fixed issue with double tap detection for forward and backward movements. If Pressed and hold then tap was not switching between fast and slow mode",
   "Remote_6.0.3.bin": "Fixed Slow Mode allowing double tap",
   "Cow_Remote_Retrofit_6.0.4.bin": "Increased Pivot Speed from 25-175 to 25-475.",
+  "Cow_Remote_Retrofit_6.2.1.bin": "Fixed issue saving values and added turn",
   "Remote_6.1.0.bin": "Do not use! Able to change the turn speed when moving",
   "Remote_6.1.1.bin": "Do not use! Fixed issue moving to the right turn was flipped",
   "Remote_6.1.2.bin": "Fixed Directions.",
   "Remote_6.2.0.bin": "Added usb support for the Configurator Cow 2 is now usable",
-  "Remote_Record_6.3.0.bin": "Added Record and Playback functionality."
+  "Remote_6.2.1.bin": "Fixed issue with not saving settings.",
+  "Remote_Record_6.3.0.bin": "Added Record and Playback functionality.",
+  "Remote_Record_6.3.1.bin": "Fixed issue with not saving settings."
 }
