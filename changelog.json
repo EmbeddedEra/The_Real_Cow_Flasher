@@ -17,6 +17,7 @@
   "Remote_6.1.2.bin": "Fixed Directions.",
   "Remote_6.2.0.bin": "Added usb support for the Configurator Cow 2 is now usable",
   "Remote_6.2.1.bin": "Fixed issue with not saving settings.",
+  "Remote_6.2.2.bin": "Defaulted turn to only 10 clicks and reset to minimum value.",
   "Remote_Record_6.3.0.bin": "Added Record and Playback functionality.",
   "Remote_Record_6.3.1.bin": "Fixed issue with not saving settings."
 }
