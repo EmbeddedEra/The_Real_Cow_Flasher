@@ -19,5 +19,6 @@
   "Remote_6.2.1.bin": "Fixed issue with not saving settings.",
   "Remote_6.2.2.bin": "Defaulted turn to only 10 clicks and reset to minimum value.",
   "Remote_Record_6.3.0.bin": "Added Record and Playback functionality.",
-  "Remote_Record_6.3.1.bin": "Fixed issue with not saving settings."
+  "Remote_Record_6.3.1.bin": "Fixed issue with not saving settings.",
+  "Remote_Record_6.3.2.bin": "To play the recording now you have to hold the play button then on release will play"
 }
