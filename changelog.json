@@ -21,5 +21,6 @@
   "Remote_6.2.3_Test.bin": "Button Debounce RF ISSUE",
   "Remote_Record_6.3.0.bin": "Added Record and Playback functionality.",
   "Remote_Record_6.3.1.bin": "Fixed issue with not saving settings.",
-  "Remote_Record_6.3.2.bin": "To play the recording now you have to hold the play button then on release will play"
+  "Remote_Record_6.3.2.bin": "To play the recording now you have to hold the play button then on release will play",
+  "Remote_Record_6.3.3.bin": "Changed play from 2 sec to 1 sec, auto shutdown increased to 7 secs."
 }
