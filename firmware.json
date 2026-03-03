@@ -1,27 +1,106 @@
 [
-  "Robot_3_tester.bin",
-  "Robot_4.0.0.bin",
-  "Robot_4.0.1.bin",
-  "Robot_4.0.2.bin",
-  "Robot_4.0.3.bin",
-  "Robot_4.0.4.bin",
-  "Robot_4.0.5.bin",
-  "Remote_6.0.0.bin",
-  "Remote_6.0.1.bin",
-  "Remote_6.0.2.bin",
-  "Remote_6.0.3.bin",
-  "Cow_Remote_Retrofit_6.0.4.bin",
-  "Cow_Remote_Retrofit_6.2.1.bin",
-  "Remote_6.1.0.bin",
-  "Remote_6.1.1.bin",
-  "Remote_6.1.2.bin",
-  "Remote_6.2.0.bin",
-  "Remote_6.2.1.bin",
-  "Remote_6.2.2.bin",
-  "Remote_6.2.3_Test.bin",
-  "Remote_Record_6.3.0.bin",
-  "Remote_Record_6.3.1.bin",
-  "Remote_Record_6.3.2.bin",
-  "Remote_Record_6.3.3.bin",
-  "Remote_Record_6.3.4.bin"
+  {
+    "filename": "Robot_3_tester.bin",
+    "changelog": "ONLY FOR TESTING THE BOARD"
+  },
+  {
+    "filename": "Robot_4.0.0.bin",
+    "changelog": "Initial release. Features: Basic robot control."
+  },
+  {
+    "filename": "Robot_4.0.1.bin",
+    "changelog": "Changed Baud Rate of cow to 38400 from 115200, Fixed accel and decel"
+  },
+  {
+    "filename": "Robot_4.0.2.bin",
+    "changelog": "Fixed Turn direction"
+  },
+  {
+    "filename": "Robot_4.0.3.bin",
+    "changelog": "Changed default acceleration to 0.04 and deceleration to 0.06 values for smoother operation."
+  },
+  {
+    "filename": "Robot_4.0.4.bin",
+    "changelog": "Changed default deceleration to 0.07."
+  },
+  {
+    "filename": "Robot_4.0.5.bin",
+    "changelog": "Fixed second Cow Address."
+  },
+  {
+    "filename": "Robot_4.0.7.bin",
+    "changelog": "Added coast threshold feature."
+  },
+  {
+    "filename": "Remote_6.0.0.bin",
+    "changelog": "Remote Initial release. Features: Basic robot control."
+  },
+  {
+    "filename": "Remote_6.0.1.bin",
+    "changelog": "Trim adjustments are applied when straight_mode is enabled. Enhanced tap detection logic for forward/backward/turns. Power-off routine improvements."
+  },
+  {
+    "filename": "Remote_6.0.2.bin",
+    "changelog": "Fixed issue with double tap detection for forward and backward movements. If Pressed and hold then tap was not switching between fast and slow mode"
+  },
+  {
+    "filename": "Remote_6.0.3.bin",
+    "changelog": "Fixed Slow Mode allowing double tap"
+  },
+  {
+    "filename": "Cow_Remote_Retrofit_6.0.4.bin",
+    "changelog": "Increased Pivot Speed from 25-175 to 25-475."
+  },
+  {
+    "filename": "Cow_Remote_Retrofit_6.2.1.bin",
+    "changelog": "Fixed issue saving values and added turn"
+  },
+  {
+    "filename": "Remote_6.1.0.bin",
+    "changelog": "Do not use! Able to change the turn speed when moving"
+  },
+  {
+    "filename": "Remote_6.1.1.bin",
+    "changelog": "Do not use! Fixed issue moving to the right turn was flipped"
+  },
+  {
+    "filename": "Remote_6.1.2.bin",
+    "changelog": "Fixed Directions."
+  },
+  {
+    "filename": "Remote_6.2.0.bin",
+    "changelog": "Added usb support for the Configurator Cow 2 is now usable"
+  },
+  {
+    "filename": "Remote_6.2.1.bin",
+    "changelog": "Fixed issue with not saving settings."
+  },
+  {
+    "filename": "Remote_6.2.2.bin",
+    "changelog": "Defaulted turn to only 10 clicks and reset to minimum value."
+  },
+  {
+    "filename": "Remote_6.2.3_Test.bin",
+    "changelog": "Button Debounce RF ISSUE"
+  },
+  {
+    "filename": "Remote_Record_6.3.0.bin",
+    "changelog": "Added Record and Playback functionality."
+  },
+  {
+    "filename": "Remote_Record_6.3.1.bin",
+    "changelog": "Fixed issue with not saving settings."
+  },
+  {
+    "filename": "Remote_Record_6.3.2.bin",
+    "changelog": "To play the recording now you have to hold the play button then on release will play"
+  },
+  {
+    "filename": "Remote_Record_6.3.3.bin",
+    "changelog": "Changed play from 2 sec to 1 sec, auto shutdown increased to 7 min."
+  },
+  {
+    "filename": "Remote_Record_6.3.4.bin",
+    "changelog": "OB_OptionBytes, LSI_RTC_ErrataFix, Fixed playback issue when drive and turn where recorded at the same time."
+  }
 ]

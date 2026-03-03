@@ -43,15 +43,18 @@
       </fieldset>
     </form>
     <script>
+      // Store firmware data globally
+      let firmwareData = [];
+
       async function populateFirmwareDropdown() {
         try {
           const response = await fetch('firmware.json');
-          let files = await response.json();
+          firmwareData = await response.json();
           // Sort files so latest version appears first
-          files.sort((a, b) => {
+          firmwareData.sort((a, b) => {
             // Extract version numbers from filenames like Robot_4.2.0.bin
-            const verA = a.match(/(\d+\.\d+\.\d+)/);
-            const verB = b.match(/(\d+\.\d+\.\d+)/);
+            const verA = a.filename.match(/(\d+\.\d+\.\d+)/);
+            const verB = b.filename.match(/(\d+\.\d+\.\d+)/);
             if (verA && verB) {
               // Compare as [major, minor, patch]
               const pa = verA[1].split('.').map(Number);
@@ -62,17 +65,18 @@
               return 0;
             }
             // If no version, sort alphabetically
-            return b.localeCompare(a);
+            return b.filename.localeCompare(a.filename);
           });
           const select = document.getElementById('firmwareVersion');
           select.innerHTML = '';
-          if (files.length === 0) {
+          if (firmwareData.length === 0) {
             select.innerHTML = '<option disabled>No firmware files found</option>';
           } else {
-            files.forEach(file => {
+            firmwareData.forEach(item => {
               const option = document.createElement('option');
-              option.value = `Firmware/${file}`;
-              option.textContent = file;
+              option.value = `Firmware/${item.filename}`;
+              option.textContent = item.filename;
+              option.dataset.changelog = item.changelog || '';
               select.appendChild(option);
             });
             // Select the first (latest) firmware by default
@@ -88,21 +92,10 @@
         }
       }
 
-      // Load changelog.json and show entry for selected firmware
-      let changelogData = {};
-      async function loadChangelog() {
-        try {
-          const response = await fetch('changelog.json');
-          changelogData = await response.json();
-        } catch (e) {
-          changelogData = {};
-        }
-      }
-
       function showChangelogForSelected() {
         const select = document.getElementById('firmwareVersion');
         const changelogDiv = document.getElementById('changelog');
-        if (!select || !changelogData) return;
+        if (!select) return;
         
         // Make sure we have a valid selection
         if (select.selectedIndex < 0 || !select.options[select.selectedIndex]) {
@@ -110,11 +103,11 @@
           return;
         }
         
-        const selected = select.options[select.selectedIndex].textContent;
-        console.log('Looking for changelog for:', selected, 'in', Object.keys(changelogData));
+        const selectedOption = select.options[select.selectedIndex];
+        const changelog = selectedOption.dataset.changelog || '';
         
-        if (selected && changelogData[selected]) {
-          changelogDiv.textContent = 'Changelog: ' + changelogData[selected];
+        if (changelog) {
+          changelogDiv.textContent = 'Changelog: ' + changelog;
         } else {
           changelogDiv.textContent = '';
         }
@@ -122,7 +115,6 @@
 
       window.addEventListener('DOMContentLoaded', async () => {
         await populateFirmwareDropdown();
-        await loadChangelog();
         // Show changelog for the default selected firmware
         showChangelogForSelected();
         document.getElementById('firmwareVersion').addEventListener('change', showChangelogForSelected);
