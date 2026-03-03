@@ -32,6 +32,10 @@
     "changelog": "Added coast threshold feature."
   },
   {
+    "filename": "Robot_4.0.8.bin",
+    "changelog": "Added coast for deseleration"
+  },
+  {
     "filename": "Remote_6.0.0.bin",
     "changelog": "Remote Initial release. Features: Basic robot control."
   },
