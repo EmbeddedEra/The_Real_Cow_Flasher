@@ -23,5 +23,6 @@
   "Remote_Record_6.3.1.bin": "Fixed issue with not saving settings.",
   "Remote_Record_6.3.2.bin": "To play the recording now you have to hold the play button then on release will play",
   "Remote_Record_6.3.3.bin": "Changed play from 2 sec to 1 sec, auto shutdown increased to 7 min.",
-  "Remote_Record_6.3.4.bin": "OB_OptionBytes, LSI_RTC_ErrataFix, Fixed playback issue when drive and turn where recorded at the same time."
+  "Remote_Record_6.3.4.bin": "OB_OptionBytes, LSI_RTC_ErrataFix, Fixed playback issue when drive and turn where recorded at the same time.",
+  "Robot_4.0.7.bin": "Added coast threshold feature."
 }
