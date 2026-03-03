@@ -33,7 +33,7 @@
   },
   {
     "filename": "Robot_4.0.8.bin",
-    "changelog": "Added coast for deseleration"
+    "changelog": "Added coast for deceleration"
   },
   {
     "filename": "Remote_6.0.0.bin",
