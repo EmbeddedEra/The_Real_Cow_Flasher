@@ -36,6 +36,10 @@
     "changelog": "Added coast for deceleration"
   },
   {
+    "filename": "Robot_4.0.9.bin",
+    "changelog": "Coast threshold now can go 0-1000."
+  },
+  {
     "filename": "Remote_6.0.0.bin",
     "changelog": "Remote Initial release. Features: Basic robot control."
   },
