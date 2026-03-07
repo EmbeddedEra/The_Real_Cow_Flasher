@@ -40,6 +40,10 @@
     "changelog": "Coast threshold now can go 0-1000."
   },
   {
+    "filename": "Robot_4.0.10.bin",
+    "changelog": "Added Decel Ratio"
+  },
+  {
     "filename": "Remote_6.0.0.bin",
     "changelog": "Remote Initial release. Features: Basic robot control."
   },
