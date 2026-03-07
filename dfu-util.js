@@ -490,35 +490,178 @@ var device = null;
             );
         }
 
-        connectButton.addEventListener('click', function() {
+        let awaitingDfuSelectionAfterBootloader = false;
+
+        async function requestAndConnectDfuDevice() {
+            let filters = [{ vendorId: 0x0483, productId: 0xDF11 }];
+            let selectedDevice = await navigator.usb.requestDevice({ 'filters': filters });
+            let interfaces = dfu.findDeviceDfuInterfaces(selectedDevice);
+
+            if (interfaces.length == 0) {
+                statusDisplay.textContent = "Selected device is not in DFU mode.";
+                return false;
+            }
+
+            await fixInterfaceNames(selectedDevice, interfaces);
+            device = await connect(new dfu.Device(selectedDevice, interfaces[0]));
+            return true;
+        }
+
+        async function requestAndHandleAnyStm32Device() {
+            let filters = [{ vendorId: 0x0483 }];
+            let selectedDevice = await navigator.usb.requestDevice({ 'filters': filters });
+            let interfaces = dfu.findDeviceDfuInterfaces(selectedDevice);
+
+            if (interfaces.length > 0) {
+                await fixInterfaceNames(selectedDevice, interfaces);
+                device = await connect(new dfu.Device(selectedDevice, interfaces[0]));
+                awaitingDfuSelectionAfterBootloader = false;
+                return true;
+            }
+
+            statusDisplay.textContent = 'Selected STM32 device is not in DFU mode. Sending BOOT_LOADER...';
+            await sendBootloaderCommand(selectedDevice);
+            awaitingDfuSelectionAfterBootloader = true;
+            statusDisplay.textContent = 'BOOT_LOADER sent. Click Connect again and select the DFU device.';
+            return false;
+        }
+
+        async function sendBootloaderOverSelectedUsbDevice(selectedDevice) {
+            if (!selectedDevice) {
+                throw new Error('No runtime USB device selected.');
+            }
+
+            let commandBytes = new TextEncoder().encode('BOOT_LOADER\r\n');
+            await selectedDevice.open();
+
+            if (selectedDevice.configuration === null) {
+                const defaultConfig = (selectedDevice.configurations && selectedDevice.configurations.length > 0)
+                    ? selectedDevice.configurations[0].configurationValue
+                    : 1;
+                await selectedDevice.selectConfiguration(defaultConfig);
+            }
+
+            let lastError = null;
+            for (let intf of selectedDevice.configuration.interfaces) {
+                try {
+                    await selectedDevice.claimInterface(intf.interfaceNumber);
+
+                    const alternates = (intf.alternates && intf.alternates.length > 0) ? intf.alternates : [intf.alternate];
+                    for (let alt of alternates) {
+                        if (!alt) {
+                            continue;
+                        }
+
+                        await selectedDevice.selectAlternateInterface(intf.interfaceNumber, alt.alternateSetting);
+
+                        const outEndpoint = alt.endpoints
+                            ? alt.endpoints.find(ep => ep.direction === 'out')
+                            : null;
+
+                        if (!outEndpoint) {
+                            continue;
+                        }
+
+                        try {
+                            await selectedDevice.controlTransferOut({
+                                requestType: 'class',
+                                recipient: 'interface',
+                                request: 0x22,
+                                value: 0x03,
+                                index: intf.interfaceNumber
+                            });
+                        } catch (controlError) {
+                            console.log('SET_CONTROL_LINE_STATE skipped:', controlError);
+                        }
+
+                        await selectedDevice.transferOut(outEndpoint.endpointNumber, commandBytes);
+                        return;
+                    }
+                } catch (error) {
+                    lastError = error;
+                } finally {
+                    try {
+                        await selectedDevice.releaseInterface(intf.interfaceNumber);
+                    } catch (releaseError) {
+                        console.log('Interface release warning:', releaseError);
+                    }
+                }
+            }
+
+            throw (lastError || new Error('No writable runtime endpoint found for BOOT_LOADER command.'));
+        }
+
+        async function sendBootloaderOverSerialPrompt() {
+            if (!navigator.serial) {
+                throw new Error('Web Serial is not available in this browser.');
+            }
+
+            let filters = [{ usbVendorId: 0x0483 }];
+            let port = await navigator.serial.requestPort({ filters: filters });
+            await port.open({ baudRate: 115200 });
+            try {
+                let writer = port.writable.getWriter();
+                try {
+                    let commandBytes = new TextEncoder().encode('BOOT_LOADER\r\n');
+                    await writer.write(commandBytes);
+                } finally {
+                    writer.releaseLock();
+                }
+            } finally {
+                await port.close();
+            }
+        }
+
+        async function sendBootloaderCommand(selectedDevice) {
+            try {
+                await sendBootloaderOverSelectedUsbDevice(selectedDevice);
+                return;
+            } catch (usbError) {
+                console.log('Direct USB BOOT_LOADER send failed, falling back to Web Serial:', usbError);
+            } finally {
+                if (selectedDevice && selectedDevice.opened) {
+                    try {
+                        await selectedDevice.close();
+                    } catch (closeError) {
+                        console.log('USB close warning:', closeError);
+                    }
+                }
+            }
+
+            statusDisplay.textContent = 'Direct USB command failed. Select STM32 serial port to send BOOT_LOADER...';
+            await sendBootloaderOverSerialPrompt();
+        }
+
+        async function connectWithBootloaderFallback() {
+            if (awaitingDfuSelectionAfterBootloader) {
+                statusDisplay.textContent = 'Select DFU device...';
+                await requestAndConnectDfuDevice();
+                awaitingDfuSelectionAfterBootloader = false;
+                return;
+            }
+
+            statusDisplay.textContent = 'Select STM32 device (DFU or runtime)...';
+            await requestAndHandleAnyStm32Device();
+        }
+
+        connectButton.addEventListener('click', async function() {
             if (device) {
                 device.close().then(onDisconnect);
                 device = null;
             } else {
-                // Always use STM32 DFU mode filter
-                let filters = [{ vendorId: 0x0483, productId: 0xDF11 }];
-                navigator.usb.requestDevice({ 'filters': filters }).then(
-                    async selectedDevice => {
-                        let interfaces = dfu.findDeviceDfuInterfaces(selectedDevice);
-                        if (interfaces.length == 0) {
-                            console.log(selectedDevice);
-                            statusDisplay.textContent = "Please select a device.";
-                        } else if (interfaces.length == 1) {
-                            await fixInterfaceNames(selectedDevice, interfaces);
-                            device = await connect(new dfu.Device(selectedDevice, interfaces[0]));
-                        } else {
-                            await fixInterfaceNames(selectedDevice, interfaces);
-                            device = await connect(new dfu.Device(selectedDevice, interfaces[0]));
-                            // interfaceDialog.showModal(); // Removed: dialog does not exist
-                        }
-                    }
-                ).catch(error => {
+                connectButton.disabled = true;
+                try {
+                    await connectWithBootloaderFallback();
+                } catch (error) {
                     if (error && error.name === 'NotFoundError') {
                         statusDisplay.textContent = 'No device selected.';
                     } else {
                         statusDisplay.textContent = error;
                     }
-                });
+                } finally {
+                    connectButton.disabled = false;
+                    updateFirmwareUIState();
+                }
             }
         });
 

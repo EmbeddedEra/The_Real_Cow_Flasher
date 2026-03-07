@@ -38,7 +38,9 @@
 
     <h3>1. Connect Your Device</h3>
     <ul>
-      <li>Click the <b>Connect</b> button and select your device from the browser prompt.</li>
+      <li>Click the <b>Connect</b> button and select your DFU device from the browser prompt.</li>
+      <li>If the selected STM32 device is not in DFU mode, the flasher asks for your normal serial device and sends <code>BOOT_LOADER</code> automatically.</li>
+      <li>After that, click <b>Connect</b> again and select the DFU device.</li>
       <li>Wait for the status to show "Connected".</li>
     </ul>
 
@@ -86,6 +88,7 @@
     <h2>Troubleshooting</h2>
     <ul>
       <li><b>No Device Found</b>: Make sure your device is in DFU mode and connected via USB.</li>
+      <li><b>BOOT_LOADER Fallback</b>: If prompted, select your normal runtime serial port so the tool can switch the board into DFU mode automatically.</li>
       <li><b>Browser Not Supported</b>: Use Chrome or Edge for WebUSB support.</li>
       <li><b>Firmware Not Flashing</b>: Check that the file is valid and compatible with your device.</li>
     </ul>
