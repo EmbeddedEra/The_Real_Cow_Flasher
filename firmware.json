@@ -114,5 +114,9 @@
   {
     "filename": "Remote_Record_6.3.4.bin",
     "changelog": "OB_OptionBytes, LSI_RTC_ErrataFix, Fixed playback issue when drive and turn where recorded at the same time."
+  },
+  {
+    "filename": "Remote_Record_6.4.1.bin",
+    "changelog": "Added digital as byte 4 with slow mode, straight mode, record and play flags. Added 2 way communication, now remote play stops when LSW opens"
   }
 ]
