@@ -118,5 +118,9 @@
   {
     "filename": "Remote_Record_6.4.1.bin",
     "changelog": "Added digital as byte 4 with slow mode, straight mode, record and play flags. Added 2 way communication, now remote play stops when LSW opens"
+  },
+  {
+    "filename": "Robot_4.2.0.bin",
+    "changelog": "RADIO_AUTO_REPLY added. 2 Way Comunication, sending back sonar info and lsw. override in slowmode."
   }
 ]
