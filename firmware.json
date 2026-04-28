@@ -122,5 +122,13 @@
   {
     "filename": "Robot_4.2.0.bin",
     "changelog": "RADIO_AUTO_REPLY added. 2 Way Comunication, sending back sonar info and lsw. override in slowmode."
+  },
+  {
+    "filename": "Robot_4.2.1.bin",
+    "changelog": "Fixed Baud Rate Sonar to 9600"
+  },
+  {
+    "filename": "Remote_Record_6.4.2.bin",
+    "changelog": "Adjusted radio/telemetry/playback. flash all indicator LEDs when try to play and sw is open."
   }
 ]
