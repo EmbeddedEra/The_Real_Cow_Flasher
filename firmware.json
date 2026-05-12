@@ -130,5 +130,13 @@
   {
     "filename": "Remote_Record_6.4.2.bin",
     "changelog": "Adjusted radio/telemetry/playback. flash all indicator LEDs when try to play and sw is open."
+  },
+  {
+    "filename": "Remote_Record_6.4.3.bin",
+    "changelog": "The safety-stop logic now stops playback when either sw_limit_1 or allstop is set"
+  },
+  {
+    "filename": "Robot_4.2.3.bin",
+    "changelog": "Safety logic was updated so obstacle stopping is controlled by the configured sensor type (instead of the SONAR_EN pin), a new USB GPIO_STATUS diagnostic command was added, and a conflict was fixed so roping/limit-switch handling no longer clears sonar all-stop unexpectedly in main.c and receiver.c. In the header/config side, sonar mode constants and configuration fields in config_manager.h are now aligned with this behavior so NONE cleanly disables sonar while ME007/TFMINI keeps stop checks active."
   }
 ]
