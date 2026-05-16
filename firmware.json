@@ -138,5 +138,13 @@
   {
     "filename": "Robot_4.2.3.bin",
     "changelog": "Safety logic was updated so obstacle stopping is controlled by the configured sensor type (instead of the SONAR_EN pin), a new USB GPIO_STATUS diagnostic command was added, and a conflict was fixed so roping/limit-switch handling no longer clears sonar all-stop unexpectedly in main.c and receiver.c. In the header/config side, sonar mode constants and configuration fields in config_manager.h are now aligned with this behavior so NONE cleanly disables sonar while ME007/TFMINI keeps stop checks active."
+  },
+  {
+    "filename": "Remote_Record_6.5.0.bin",
+    "changelog": "Introduce play_stop_delay_ms."
+  },
+  {
+    "filename": "Robot_4.3.0.bin",
+    "changelog": "Introduce a configurable sonar 'stop assert' timeout to debounce/require sustained obstacle detection before asserting all-stop."
   }
 ]
