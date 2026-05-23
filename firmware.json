@@ -146,5 +146,13 @@
   {
     "filename": "Robot_4.3.0.bin",
     "changelog": "Introduce a configurable sonar 'stop assert' timeout to debounce/require sustained obstacle detection before asserting all-stop."
+  },
+  {
+    "filename": "Remote_Record_6.5.1.bin",
+    "changelog": "Fixed issue with usb 2nd address and play stop delay."
+  },
+  {
+    "filename": "Robot_4.3.1.bin",
+    "changelog": "Fixed 2nd address and cow limit switch logic."
   }
 ]
