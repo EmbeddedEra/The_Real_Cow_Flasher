@@ -96,6 +96,10 @@
     "changelog": "Button Debounce RF ISSUE"
   },
   {
+    "filename": "Remote_6.2.4.bin",
+    "changelog": "Increased pivot turn max."
+  },
+  {
     "filename": "Remote_Record_6.3.0.bin",
     "changelog": "Added Record and Playback functionality."
   },
@@ -150,6 +154,10 @@
   {
     "filename": "Remote_Record_6.5.1.bin",
     "changelog": "Fixed issue with usb 2nd address and play stop delay."
+  },
+  {
+    "filename": "Remote_Record_6.5.2.bin",
+    "changelog": "Increased pivot turn max."
   },
   {
     "filename": "Robot_4.3.1.bin",
