@@ -165,11 +165,12 @@
   },
   {
     "filename": "Robot_4.3.2.bin",
-    "changelog": "Added decel cut off."
+    "changelog": "Add TFmini support, obstacle filter & telemetry."
+    
   },
   {
     "filename": "Robot_4.4.0.bin",
-    "changelog": "Add TFmini support, obstacle filter & telemetry."
-  },
+    "changelog": "Added decel cut off."
+  }
   
 ]
