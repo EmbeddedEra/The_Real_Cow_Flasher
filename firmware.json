@@ -171,10 +171,6 @@
   {
     "filename": "Robot_4.4.0.bin",
     "changelog": "Added decel cut off."
-  },
-  {
-    "filename": "Robot_4.5.0.bin",
-    "changelog": "Added current control when reaching 0."
   }
   
 ]
