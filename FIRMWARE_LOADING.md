@@ -10,6 +10,8 @@ The Real Cow Flasher web tool allows you to flash firmware to supported devices 
 
 ## How to Use
 
+The customer pairing guide is available at [`output/pdf/Cow_Remote_Robot_Pairing_Quick_Guide.pdf`](output/pdf/Cow_Remote_Robot_Pairing_Quick_Guide.pdf).
+
 ### Getting Your Device into DFU Mode
 
 To enter DFU mode on most STM32-based devices:
@@ -31,6 +33,13 @@ If it does not appear, check your USB cable and try the steps again.
 - **Option B: Local File**
   - Click **Or load from computer** and select a firmware file (`.bin`, `.hex`, `.dfu`).
 - Only one method can be active at a time. Selecting a file clears the dropdown, and vice versa.
+
+### Pairing-Mode Firmware
+
+- **Robot:** `Robot_4.8.4.bin`
+- **Regular Cow remote:** `Cow_Remote_6.14.4.bin`
+- **Recording remote:** `Remote_Record_6.5.2.bin`
+- Flash only the firmware that matches the connected hardware. The firmware selector shows the pairing-mode release in its changelog.
 
 ### 3. Flash Firmware
 - Click **Download** to start flashing.

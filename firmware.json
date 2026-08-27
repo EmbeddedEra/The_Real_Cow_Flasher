@@ -157,7 +157,7 @@
   },
   {
     "filename": "Remote_Record_6.5.2.bin",
-    "changelog": "Increased pivot turn max."
+    "changelog": "Pairing-mode release for the recording remote. Retains the increased pivot-turn maximum."
   },
   {
     "filename": "Robot_4.3.1.bin",
@@ -171,6 +171,14 @@
   {
     "filename": "Robot_4.4.0.bin",
     "changelog": "Added decel cut off."
+  },
+  {
+    "filename": "Robot_4.8.4.bin",
+    "changelog": "Pairing-mode release for the robot receiver."
+  },
+  {
+    "filename": "Cow_Remote_6.14.4.bin",
+    "changelog": "Pairing-mode release for the regular Cow remote."
   }
   
 ]

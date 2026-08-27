@@ -14,12 +14,17 @@
       #changelog { margin-top: 1em; color: #ccc; }
       #localFirmware { margin-left: 10px; }
       .firmware-option { margin-bottom: 8px; }
+      .help-actions { float: right; display: flex; gap: 0.5rem; align-items: center; }
+      .help-actions a { white-space: nowrap; }
     </style>
   </head>
   <body>
     <h1>The Real Cow Flasher</h1>
     <button id="connect">Connect</button>
-   <button id="helpBtn" style="float:right;">Instructions</button>
+    <div class="help-actions">
+      <button id="helpBtn" type="button">Instructions</button>
+      <a href="output/pdf/Cow_Remote_Robot_Pairing_Quick_Guide.pdf" target="_blank" rel="noopener">Pairing PDF</a>
+    </div>
     <span id="status" style="margin-left: 1em;"></span>
     <div id="usbInfo" style="white-space: pre"></div>
     <div id="dfuInfo" style="white-space: pre"></div>
@@ -44,6 +49,7 @@
     </form>
     <p id="remoteDipNote" style="margin-top: 1.5em; color: #ffd54f;">
       Remote DIP switches: DIP 1 and DIP 3 are for normal remote cow mode. DIP 2 and DIP 4 are for recording mode.
+      Use the pairing-mode firmware that matches the robot, regular remote, or recording remote hardware.
     </p>
     <script>
       // Store firmware data globally
