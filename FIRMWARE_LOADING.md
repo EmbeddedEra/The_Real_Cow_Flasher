@@ -38,6 +38,16 @@ If it does not appear, check your USB cable and try the steps again.
 
 - **Robot:** `Robot_4.8.4.bin`
 - **Regular Cow remote:** `Cow_Remote_6.15.0.bin`
+  Max power defaults (set from The Real Cow Configurator, Remote Settings; `RESET` restores them):
+
+  | Setting | Default | Step | Range |
+  |---|---|---|---|
+  | Pivot Max Power | 325 | 15 | 115-1000 |
+  | Slow Max Power | 1000 | 50 | 350-1000 |
+  | Fast Max Power | 1000 | 50 | 800-1000 |
+  | Slow Mode Max Power | 150 | 10 | 110-1000 |
+
+  Flashing does not touch the EEPROM, so a remote keeps whatever was last saved. Use **Default Reset** in the configurator to return to these values.
 - **Recording remote:** `Remote_Record_6.5.2.bin`
 - Flash only the firmware that matches the connected hardware. The firmware selector shows the pairing-mode release in its changelog.
 
