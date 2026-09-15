@@ -166,7 +166,6 @@
   {
     "filename": "Robot_4.3.2.bin",
     "changelog": "Add TFmini support, obstacle filter & telemetry."
-    
   },
   {
     "filename": "Robot_4.4.0.bin",
@@ -179,6 +178,9 @@
   {
     "filename": "Cow_Remote_6.14.4.bin",
     "changelog": "Pairing-mode release for the regular Cow remote."
+  },
+  {
+    "filename": "Cow_Remote_6.15.0.bin",
+    "changelog": "Max power is now configurable over USB and in The Real Cow Configurator: PIVOT_MAX (stationary pivot, default 325), SLOW_MAX (default 1000), FAST_MAX (default 1000) and SLOW_MODE_MAX (default 150), all in motor units 0-1000. Values are saved in EEPROM and shown by DUMP. Includes pairing mode."
   }
-  
 ]

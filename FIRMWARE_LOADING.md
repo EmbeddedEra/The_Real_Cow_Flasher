@@ -37,7 +37,7 @@ If it does not appear, check your USB cable and try the steps again.
 ### Pairing-Mode Firmware
 
 - **Robot:** `Robot_4.8.4.bin`
-- **Regular Cow remote:** `Cow_Remote_6.14.4.bin`
+- **Regular Cow remote:** `Cow_Remote_6.15.0.bin`
 - **Recording remote:** `Remote_Record_6.5.2.bin`
 - Flash only the firmware that matches the connected hardware. The firmware selector shows the pairing-mode release in its changelog.
 
